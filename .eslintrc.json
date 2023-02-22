@@ -216,12 +216,5 @@
     ],
     "space-in-parens": ["error", "never"],
     "radix": "error"
-  },
-  "overrides": [
-    {
-      "files": ["**/*.test.tsx"],
-      "extends": ["plugin:jest/recommended", "plugin:jest/style"],
-      "plugins": ["jest", "jest-formatting"]
-    }
-  ]
+  }
 }
