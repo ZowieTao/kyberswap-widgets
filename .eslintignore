@@ -4,6 +4,5 @@
 /net/http/gatewayComponents.ts
 *.d.ts
 *.config.js
-jest.config.js
 jest.setup.js
 wasm_exec.js
