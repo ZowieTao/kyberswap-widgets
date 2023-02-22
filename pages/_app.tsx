@@ -1,7 +1,8 @@
 import '@/styles/globals.css';
 
 import { AppProps } from 'next/app';
-import { configureChains, createClient, mainnet, WagmiConfig } from 'wagmi';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { mainnet, polygon } from 'wagmi/chains';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
@@ -10,7 +11,7 @@ import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet],
+  [mainnet, polygon],
   [alchemyProvider({ apiKey: 'yourAlchemyApiKey' }), publicProvider()],
 );
 
