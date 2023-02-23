@@ -18,19 +18,17 @@ import {
   widgetDarkTheme,
   widgetLightTheme,
 } from '@/constant/style/kyberswap-widget';
-import { useAsyncValue } from '@/hooks/base/useAsyncValue';
+
+import useConnector2Provider from './useConnector2Provider';
 
 const Home: NextPage = () => {
   const { address, connector, isConnected } = useAccount();
   const { data: ensAvatar } = useEnsAvatar({ address });
   const { data: ensName } = useEnsName({ address });
-  const { value: provider } = useAsyncValue(async () => {
-    const provider = await connector?.getProvider();
-
-    return provider;
-  });
 
   const [chainId, setChainId] = useState(1);
+
+  const provider = useConnector2Provider(connector);
 
   useEffect(() => {
     provider?.getNetwork().then((res: any) => {
@@ -56,6 +54,17 @@ const Home: NextPage = () => {
   const { connect, connectors, error, isLoading, pendingConnector } =
     useConnect();
 
+  const [_isConnected, _setIsConnected] = useState(false);
+  const [_connectors, _setConnectors] = useState<any[]>([]);
+
+  useEffect(() => {
+    _setIsConnected(isConnected);
+  }, [isConnected]);
+
+  useEffect(() => {
+    _setConnectors(connectors);
+  }, [connectors]);
+
   const { disconnect } = useDisconnect();
 
   return (
@@ -64,7 +73,7 @@ const Home: NextPage = () => {
       <main>
         <div>
           <h1 onClick={toggleWidgetTheme}>KyberSwap Widget</h1>
-          {isConnected && connector ? (
+          {_isConnected && connector ? (
             <div>
               {ensAvatar && <Image src={ensAvatar} alt="ENS Avatar" />}
               <div>{ensName ? `${ensName} (${address})` : address}</div>
@@ -78,7 +87,7 @@ const Home: NextPage = () => {
               </button>
             </div>
           ) : (
-            connectors.map((connector) => {
+            _connectors.map((connector) => {
               return (
                 <div key={connector.id}>
                   <button
@@ -88,7 +97,7 @@ const Home: NextPage = () => {
                     }}
                   >
                     {connector.name}
-                    {!connector.ready && ' (unsupported)'}
+                    {!connector?.ready && ' (unsupported)'}
                     {isLoading &&
                       connector.id === pendingConnector?.id &&
                       ' (connecting)'}
@@ -98,7 +107,15 @@ const Home: NextPage = () => {
             })
           )}
 
-          {error && <div>{error.message}</div>}
+          {error && (
+            <div
+              style={{
+                color: 'red',
+              }}
+            >
+              {error.message}
+            </div>
+          )}
 
           <div>
             <p className="title">Charge fee</p>
