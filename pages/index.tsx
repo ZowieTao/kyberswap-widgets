@@ -3,9 +3,17 @@ import { Theme } from '@kyberswap/widgets/dist/theme';
 import isEqual from 'lodash/isEqualWith';
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useEnsAvatar,
+  useEnsName,
+} from 'wagmi';
 
+import { defaultTokenOut } from '@/constant/kyberswap';
 import {
   widgetDarkTheme,
   widgetLightTheme,
@@ -13,20 +21,13 @@ import {
 import { useAsyncValue } from '@/hooks/base/useAsyncValue';
 
 const Home: NextPage = () => {
-  const { connector } = useAccount();
+  const { address, connector, isConnected } = useAccount();
+  const { data: ensAvatar } = useEnsAvatar({ address });
+  const { data: ensName } = useEnsName({ address });
   const { value: provider } = useAsyncValue(async () => {
     const provider = await connector?.getProvider();
 
     return provider;
-  });
-
-  const [theme, setTheme] = useState<Theme>(widgetDarkTheme);
-
-  const [feeSetting, setFeeSetting] = useState({
-    feeAmount: 0,
-    feeReceiver: '',
-    chargeFeeBy: 'currency_in' as 'currency_in' | 'currency_out',
-    isInBps: true,
   });
 
   const [chainId, setChainId] = useState(1);
@@ -37,20 +38,14 @@ const Home: NextPage = () => {
     });
   }, [provider]);
 
-  const defaultTokenOut: { [chainId: number]: string } = {
-    1: '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202',
-    137: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-    56: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
-    43114: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
-    250: '0x049d68029688eAbF473097a2fC38ef61633A3C7A',
-    25: '0x66e428c3f67a68878562e79A0234c1F83c208770',
-    42161: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9',
-    199: '0x9B5F27f6ea9bBD753ce3793a07CbA3C74644330d',
-    106: '0x01445C31581c354b7338AC35693AB2001B50b9aE',
-    1313161554: '0x4988a896b1227218e4a686fde5eabdcabd91571f',
-    42262: '0x6Cb9750a92643382e020eA9a170AbB83Df05F30B',
-    10: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
-  };
+  const [feeSetting, setFeeSetting] = useState({
+    feeAmount: 0,
+    feeReceiver: '',
+    chargeFeeBy: 'currency_in' as 'currency_in' | 'currency_out',
+    isInBps: true,
+  });
+
+  const [theme, setTheme] = useState<Theme>(widgetDarkTheme);
 
   const toggleWidgetTheme = useCallback(() => {
     setTheme((pre) => {
@@ -58,32 +53,56 @@ const Home: NextPage = () => {
     });
   }, []);
 
+  const { connect, connectors, error, isLoading, pendingConnector } =
+    useConnect();
+
+  const { disconnect } = useDisconnect();
+
   return (
     <>
-      <Head>
-        <title>Opencord Kyberswap Widgets Plugin</title>
-        <meta
-          name="description"
-          content="opencord plugin for kyberswap widgets"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <AppHeader />
       <main>
         <div>
-          <h1 onClick={toggleWidgetTheme}>KyberSwap Widget </h1>
-          {/* <div className="card">
-            <button
-              onClick={() => {
-                return wallet ? disconnect(wallet) : connect();
-              }}
-              className="button"
-            >
-              {!wallet ? 'Connect Wallet' : 'Disconnect'}
-            </button>
-          </div> */}
+          <h1 onClick={toggleWidgetTheme}>KyberSwap Widget</h1>
+          {isConnected && connector ? (
+            <div>
+              {ensAvatar && <Image src={ensAvatar} alt="ENS Avatar" />}
+              <div>{ensName ? `${ensName} (${address})` : address}</div>
+              <div>Connected to {connector.name}</div>
+              <button
+                onClick={() => {
+                  disconnect();
+                }}
+              >
+                Disconnect
+              </button>
+            </div>
+          ) : (
+            connectors.map((connector) => {
+              return (
+                <div key={connector.id}>
+                  <button
+                    disabled={!connector.ready}
+                    onClick={() => {
+                      return connect({ connector });
+                    }}
+                  >
+                    {connector.name}
+                    {!connector.ready && ' (unsupported)'}
+                    {isLoading &&
+                      connector.id === pendingConnector?.id &&
+                      ' (connecting)'}
+                  </button>
+                </div>
+              );
+            })
+          )}
 
-          <p className="title">Charge fee</p>
+          {error && <div>{error.message}</div>}
+
+          <div>
+            <p className="title">Charge fee</p>
+          </div>
           <div className="row">
             chargeFeeBy
             <div style={{ display: 'flex' }}>
@@ -174,3 +193,17 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+const AppHeader = () => {
+  return (
+    <Head>
+      <title>Opencord Kyberswap Widgets Plugin</title>
+      <meta
+        name="description"
+        content="opencord plugin for kyberswap widgets"
+      />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
+  );
+};
