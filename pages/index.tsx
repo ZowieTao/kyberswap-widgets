@@ -2,7 +2,6 @@ import { Widget } from '@kyberswap/widgets';
 import { Theme } from '@kyberswap/widgets/dist/theme';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { ethers } from 'ethers';
-import { motion } from 'framer-motion';
 import isEqual from 'lodash/isEqualWith';
 import type { NextPage } from 'next';
 import Head from 'next/head';
@@ -65,24 +64,30 @@ const Home: NextPage = () => {
   return (
     <>
       <AppHeader />
-      <main
-        className="overflow-hidden h-screen max-w-[1600px] mx-auto bg-no-repeat bg-page"
-        // style={{
-        //   backgroundImage: 'url("/bg.svg")',
-        // }}
-      >
-        <motion.div>
-          <Image width="200" height="100" src={banner} alt="opencord" />
-          <Image width="200" height="100" src={bgItem} alt="opencord" />
+      <main className="mx-auto box-content h-screen overflow-hidden bg-bg bg-cover bg-no-repeat">
+        <div className="h-full overflow-y-scroll">
+          <Image
+            className="absolute bottom-0 right-0 "
+            src={bgItem}
+            alt="background image"
+            height="400"
+            width="400"
+          />
+          <Image
+            className=""
+            src={banner}
+            alt="opencord banner"
+            height="100"
+            width="100"
+          />
           <ConnectButton label="Sign in" />
-
-          <motion.div>
-            <p className="">Charge Fee</p>
-          </motion.div>
-          <motion.div className="">
+          <div>
+            <p>Charge Fee</p>
+          </div>
+          <div>
             chargeFeeBy
-            <motion.div>
-              <motion.div>
+            <div>
+              <div>
                 <input
                   type="radio"
                   id="currency_in"
@@ -96,8 +101,8 @@ const Home: NextPage = () => {
                   }}
                 />
                 <label htmlFor="currency_in">currency_in</label>
-              </motion.div>
-              <motion.div>
+              </div>
+              <div>
                 <input
                   type="radio"
                   id="currency_out"
@@ -111,11 +116,10 @@ const Home: NextPage = () => {
                   }}
                 />
                 <label htmlFor="currency_out"> currency_out</label>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-
-          <motion.div className="">
+              </div>
+            </div>
+          </div>
+          <div>
             feeReceiver
             <input
               value={feeSetting.feeReceiver}
@@ -126,9 +130,8 @@ const Home: NextPage = () => {
                 });
               }}
             />
-          </motion.div>
-
-          <motion.div className="">
+          </div>
+          <div>
             feeAmount
             <input
               value={feeSetting.feeAmount}
@@ -139,9 +142,8 @@ const Home: NextPage = () => {
                 });
               }}
             />
-          </motion.div>
-
-          <motion.div className="" style={{ justifyContent: 'flex-end' }}>
+          </div>
+          <div>
             <input
               type="checkbox"
               checked={feeSetting.isInBps}
@@ -150,7 +152,7 @@ const Home: NextPage = () => {
               }}
             />
             <label htmlFor="isInBps">isInBps</label>
-          </motion.div>
+          </div>
           <Widget
             theme={theme}
             tokenList={[]}
@@ -162,7 +164,7 @@ const Home: NextPage = () => {
                 : undefined
             }
           />
-        </motion.div>
+        </div>
       </main>
     </>
   );

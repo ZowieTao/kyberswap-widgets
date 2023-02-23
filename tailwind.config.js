@@ -11,12 +11,6 @@ module.exports = {
       serif: 'DM Serif Display',
       body: 'Rubik',
     },
-    container: {
-      padding: {
-        DEFAULT: '1rem',
-        lg: '0',
-      },
-    },
     screens: {
       sm: '640px',
       md: '768px',
@@ -25,7 +19,7 @@ module.exports = {
     },
     extend: {
       colors: {
-        page: 'red',
+        page: '#404040',
         primary: '#402B2B',
         accent: {
           DEFAULT: '#EE4D47',
@@ -33,6 +27,11 @@ module.exports = {
         },
         tint: '#FDEDE8',
         darkblue: '#0F264C',
+      },
+      backgroundImage: {
+        bg: "url('/bg.svg')",
+        bgItem: "url('/bg-item.svg')",
+        banner: "url('/banner.svg')",
       },
     },
   },
