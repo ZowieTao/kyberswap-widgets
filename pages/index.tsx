@@ -2,9 +2,11 @@ import { Widget } from '@kyberswap/widgets';
 import { Theme } from '@kyberswap/widgets/dist/theme';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { ethers } from 'ethers';
+import { motion } from 'framer-motion';
 import isEqual from 'lodash/isEqualWith';
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -13,6 +15,7 @@ import {
   widgetDarkTheme,
   widgetLightTheme,
 } from '@/constant/style/kyberswap-widget';
+import { banner, bgItem } from '@/public';
 
 const Home: NextPage = () => {
   const { connector } = useAccount();
@@ -34,12 +37,14 @@ const Home: NextPage = () => {
     } else {
       setProvider(undefined);
     }
+  }, [connector]);
+
+  useEffect(() => {
     provider &&
       provider.getNetwork().then((res: any) => {
         return setChainId(res.chainId);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connector]);
+  }, [provider]);
 
   const [feeSetting, setFeeSetting] = useState({
     feeAmount: 0,
@@ -60,17 +65,24 @@ const Home: NextPage = () => {
   return (
     <>
       <AppHeader />
-      <main>
-        <div>
+      <main
+        className="overflow-hidden h-screen max-w-[1600px] mx-auto bg-no-repeat bg-page"
+        // style={{
+        //   backgroundImage: 'url("/bg.svg")',
+        // }}
+      >
+        <motion.div>
+          <Image width="200" height="100" src={banner} alt="opencord" />
+          <Image width="200" height="100" src={bgItem} alt="opencord" />
           <ConnectButton label="Sign in" />
 
-          <div>
-            <p className="title">Charge fee</p>
-          </div>
-          <div className="row">
+          <motion.div>
+            <p className="">Charge Fee</p>
+          </motion.div>
+          <motion.div className="">
             chargeFeeBy
-            <div style={{ display: 'flex' }}>
-              <div>
+            <motion.div>
+              <motion.div>
                 <input
                   type="radio"
                   id="currency_in"
@@ -84,8 +96,8 @@ const Home: NextPage = () => {
                   }}
                 />
                 <label htmlFor="currency_in">currency_in</label>
-              </div>
-              <div>
+              </motion.div>
+              <motion.div>
                 <input
                   type="radio"
                   id="currency_out"
@@ -99,11 +111,11 @@ const Home: NextPage = () => {
                   }}
                 />
                 <label htmlFor="currency_out"> currency_out</label>
-              </div>
-            </div>
-          </div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
 
-          <div className="row">
+          <motion.div className="">
             feeReceiver
             <input
               value={feeSetting.feeReceiver}
@@ -114,9 +126,9 @@ const Home: NextPage = () => {
                 });
               }}
             />
-          </div>
+          </motion.div>
 
-          <div className="row">
+          <motion.div className="">
             feeAmount
             <input
               value={feeSetting.feeAmount}
@@ -127,9 +139,9 @@ const Home: NextPage = () => {
                 });
               }}
             />
-          </div>
+          </motion.div>
 
-          <div className="row" style={{ justifyContent: 'flex-end' }}>
+          <motion.div className="" style={{ justifyContent: 'flex-end' }}>
             <input
               type="checkbox"
               checked={feeSetting.isInBps}
@@ -138,19 +150,19 @@ const Home: NextPage = () => {
               }}
             />
             <label htmlFor="isInBps">isInBps</label>
-          </div>
-        </div>
-        <Widget
-          theme={theme}
-          tokenList={[]}
-          provider={provider}
-          defaultTokenOut={defaultTokenOut[chainId]}
-          feeSetting={
-            feeSetting.feeAmount && feeSetting.feeReceiver
-              ? feeSetting
-              : undefined
-          }
-        />
+          </motion.div>
+          <Widget
+            theme={theme}
+            tokenList={[]}
+            provider={provider}
+            defaultTokenOut={defaultTokenOut[chainId]}
+            feeSetting={
+              feeSetting.feeAmount && feeSetting.feeReceiver
+                ? feeSetting
+                : undefined
+            }
+          />
+        </motion.div>
       </main>
     </>
   );
