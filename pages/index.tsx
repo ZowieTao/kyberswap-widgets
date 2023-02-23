@@ -1,17 +1,12 @@
 import { Widget } from '@kyberswap/widgets';
 import { Theme } from '@kyberswap/widgets/dist/theme';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { ethers } from 'ethers';
 import isEqual from 'lodash/isEqualWith';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
-import {
-  useAccount,
-  useConnect,
-  useDisconnect,
-  useEnsAvatar,
-  useEnsName,
-} from 'wagmi';
+import { useAccount } from 'wagmi';
 
 import { defaultTokenOut } from '@/constant/kyberswap';
 import {
@@ -19,22 +14,32 @@ import {
   widgetLightTheme,
 } from '@/constant/style/kyberswap-widget';
 
-import useConnector2Provider from './useConnector2Provider';
-
 const Home: NextPage = () => {
-  const { address, connector, isConnected } = useAccount();
-  const { data: ensAvatar } = useEnsAvatar({ address });
-  const { data: ensName } = useEnsName({ address });
-
+  const { connector } = useAccount();
   const [chainId, setChainId] = useState(1);
-
-  const provider = useConnector2Provider(connector);
+  const [provider, setProvider] = useState<
+    ethers.providers.Web3Provider | undefined
+  >(undefined);
 
   useEffect(() => {
-    provider?.getNetwork().then((res: any) => {
-      return setChainId(res.chainId);
-    });
-  }, [provider]);
+    if (connector) {
+      console.log(connector, 'will get provider');
+      connector.getProvider().then((walletProvider) => {
+        const web3Provider = new ethers.providers.Web3Provider(
+          walletProvider,
+          'any',
+        );
+        setProvider(web3Provider);
+      });
+    } else {
+      setProvider(undefined);
+    }
+    provider &&
+      provider.getNetwork().then((res: any) => {
+        return setChainId(res.chainId);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connector]);
 
   const [feeSetting, setFeeSetting] = useState({
     feeAmount: 0,
@@ -45,77 +50,19 @@ const Home: NextPage = () => {
 
   const [theme, setTheme] = useState<Theme>(widgetDarkTheme);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const toggleWidgetTheme = useCallback(() => {
     setTheme((pre) => {
       return isEqual(pre, widgetDarkTheme) ? widgetLightTheme : widgetDarkTheme;
     });
   }, []);
 
-  const { connect, connectors, error, isLoading, pendingConnector } =
-    useConnect();
-
-  const [_isConnected, _setIsConnected] = useState(false);
-  const [_connectors, _setConnectors] = useState<any[]>([]);
-
-  useEffect(() => {
-    _setIsConnected(isConnected);
-  }, [isConnected]);
-
-  useEffect(() => {
-    _setConnectors(connectors);
-  }, [connectors]);
-
-  const { disconnect } = useDisconnect();
-
   return (
     <>
       <AppHeader />
       <main>
         <div>
-          <h1 onClick={toggleWidgetTheme}>KyberSwap Widget</h1>
-          {_isConnected && connector ? (
-            <div>
-              {ensAvatar && <Image src={ensAvatar} alt="ENS Avatar" />}
-              <div>{ensName ? `${ensName} (${address})` : address}</div>
-              <div>Connected to {connector.name}</div>
-              <button
-                onClick={() => {
-                  disconnect();
-                }}
-              >
-                Disconnect
-              </button>
-            </div>
-          ) : (
-            _connectors.map((connector) => {
-              return (
-                <div key={connector.id}>
-                  <button
-                    disabled={!connector.ready}
-                    onClick={() => {
-                      return connect({ connector });
-                    }}
-                  >
-                    {connector.name}
-                    {!connector?.ready && ' (unsupported)'}
-                    {isLoading &&
-                      connector.id === pendingConnector?.id &&
-                      ' (connecting)'}
-                  </button>
-                </div>
-              );
-            })
-          )}
-
-          {error && (
-            <div
-              style={{
-                color: 'red',
-              }}
-            >
-              {error.message}
-            </div>
-          )}
+          <ConnectButton label="Sign in" />
 
           <div>
             <p className="title">Charge fee</p>
