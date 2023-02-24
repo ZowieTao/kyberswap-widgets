@@ -1,9 +1,7 @@
 import { Widget } from '@kyberswap/widgets';
-import { Theme } from '@kyberswap/widgets/dist/theme';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { ethers } from 'ethers';
 import { motion } from 'framer-motion';
-import isEqual from 'lodash/isEqualWith';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -11,10 +9,7 @@ import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { defaultTokenOut } from '@/constant/kyberswap';
-import {
-  widgetDarkTheme,
-  widgetLightTheme,
-} from '@/constant/style/kyberswap-widget';
+import { widgetLightTheme } from '@/constant/style/kyberswap-widget';
 import { banner, bgItem } from '@/public';
 import { fadeInDown, staggerContainer } from '@/styles/variants';
 
@@ -47,14 +42,14 @@ const Home: NextPage = () => {
       });
   }, [provider]);
 
+  useEffect(() => {}, []);
+
   const [feeSetting, setFeeSetting] = useState({
     feeAmount: 0,
     feeReceiver: '',
     chargeFeeBy: 'currency_in' as 'currency_in' | 'currency_out',
     isInBps: true,
   });
-
-  const [theme, setTheme] = useState<Theme>(widgetLightTheme);
 
   return (
     <>
@@ -91,6 +86,30 @@ const Home: NextPage = () => {
             height="400"
             width="400"
           />
+          <Image
+            className="top-banner"
+            src={banner}
+            alt="opencord banner"
+            height="36"
+            width="147"
+            style={{
+              left: '20px',
+              top: '20px',
+              position: 'fixed',
+            }}
+          />
+          <Image
+            height="36"
+            width="0"
+            src={banner}
+            alt="opencord banner"
+            className="bottom-banner"
+            style={{
+              left: '20px',
+              bottom: '40px',
+              position: 'fixed',
+            }}
+          />
           <motion.header
             variants={fadeInDown}
             style={{
@@ -100,32 +119,6 @@ const Home: NextPage = () => {
               display: 'flex',
             }}
           >
-            <Image
-              onClick={() => {
-                setTheme((pre) => {
-                  return isEqual(pre, widgetDarkTheme)
-                    ? widgetLightTheme
-                    : widgetDarkTheme;
-                });
-              }}
-              className="top-banner"
-              src={banner}
-              alt="opencord banner"
-              height="36"
-              width="147"
-              style={{}}
-            />
-            <Image
-              height="36"
-              width="0"
-              src={banner}
-              alt="opencord banner"
-              className="bottom-banner"
-              style={{
-                bottom: '40px',
-                position: 'fixed',
-              }}
-            />
             <div
               style={{
                 flex: '1',
@@ -234,7 +227,7 @@ const Home: NextPage = () => {
               </div>
             </div>
             <Widget
-              theme={theme}
+              theme={widgetLightTheme}
               tokenList={[]}
               provider={provider}
               defaultTokenOut={defaultTokenOut[chainId]}
