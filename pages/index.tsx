@@ -16,7 +16,7 @@ import {
   widgetLightTheme,
 } from '@/constant/style/kyberswap-widget';
 import { banner, bgItem } from '@/public';
-import { fadeInDown, fadeInUp, staggerContainer } from '@/styles/variants';
+import { fadeInDown, staggerContainer } from '@/styles/variants';
 
 const Home: NextPage = () => {
   const { connector } = useAccount();
@@ -59,15 +59,33 @@ const Home: NextPage = () => {
   return (
     <>
       <AppHeader />
-      <main className="mx-auto box-content h-screen overflow-hidden bg-bg bg-cover bg-no-repeat">
+      <main
+        style={{
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          boxSizing: 'border-box',
+          height: '100vh',
+          overflow: 'hidden',
+          background: 'url("/bg.svg")',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
         <motion.section
-          className="h-full overflow-y-scroll"
+          style={{
+            height: '100%',
+            overflowY: 'scroll',
+          }}
           variants={staggerContainer}
           initial="initial"
           animate="animate"
         >
           <Image
-            className="absolute bottom-0 right-0"
+            style={{
+              position: 'absolute',
+              bottom: '0',
+              right: '0',
+            }}
             src={bgItem}
             alt="background image"
             height="400"
@@ -75,10 +93,14 @@ const Home: NextPage = () => {
           />
           <motion.header
             variants={fadeInDown}
-            className=" relative mb-5 flex pl-7 pt-5 pr-3"
+            style={{
+              position: 'relative',
+              marginBottom: '10px',
+              padding: '20px 15px 0 30px',
+              display: 'flex',
+            }}
           >
             <Image
-              className=""
               onClick={() => {
                 setTheme((pre) => {
                   return isEqual(pre, widgetDarkTheme)
@@ -86,121 +108,142 @@ const Home: NextPage = () => {
                     : widgetDarkTheme;
                 });
               }}
+              className="top-banner"
               src={banner}
               alt="opencord banner"
-              height="200"
-              width="200"
+              height="36"
+              width="147"
+              style={{}}
             />
-            <div className=" flex-1" />
-            <div className="ty:hidden sm:inline">
-              <ConnectButton label="Sign in" />
+            <Image
+              height="36"
+              width="0"
+              src={banner}
+              alt="opencord banner"
+              className="bottom-banner"
+              style={{
+                bottom: '40px',
+                position: 'fixed',
+              }}
+            />
+            <div
+              style={{
+                flex: '1',
+              }}
+            />
+            <div
+              style={{
+                display: 'flex',
+                height: '40px',
+              }}
+            >
+              <ConnectButton label="Connect wallet" />
             </div>
           </motion.header>
-
           <motion.div
             variants={fadeInDown}
-            className=" w-1/1 flex justify-center"
+            style={{
+              width: '100vw',
+              maxWidth: '100vw',
+              padding: '24px',
+              display: 'flex',
+              justifyContent: 'center',
+              boxSizing: 'border-box',
+              marginTop: '48px',
+            }}
           >
-            <div className=" lg:flex">
-              <div className=" hidden w-96 rounded-2xl bg-white">
+            <div
+              style={{
+                display: 'none',
+              }}
+            >
+              <div>
+                <p>Charge Fee</p>
+              </div>
+              <div>
+                chargeFeeBy
                 <div>
-                  <p>Charge Fee</p>
-                </div>
-                <div>
-                  chargeFeeBy
                   <div>
-                    <div>
-                      <input
-                        type="radio"
-                        id="currency_in"
-                        name="chargeFeeBy"
-                        value="currency_in"
-                        onChange={() => {
-                          setFeeSetting({
-                            ...feeSetting,
-                            chargeFeeBy: 'currency_in',
-                          });
-                        }}
-                      />
-                      <label htmlFor="currency_in">currency_in</label>
-                    </div>
-                    <div>
-                      <input
-                        type="radio"
-                        id="currency_out"
-                        name="chargeFeeBy"
-                        value="currency_out"
-                        onChange={() => {
-                          setFeeSetting({
-                            ...feeSetting,
-                            chargeFeeBy: 'currency_out',
-                          });
-                        }}
-                      />
-                      <label htmlFor="currency_out"> currency_out</label>
-                    </div>
+                    <input
+                      type="radio"
+                      id="currency_in"
+                      name="chargeFeeBy"
+                      value="currency_in"
+                      onChange={() => {
+                        setFeeSetting({
+                          ...feeSetting,
+                          chargeFeeBy: 'currency_in',
+                        });
+                      }}
+                    />
+                    <label htmlFor="currency_in">currency_in</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="currency_out"
+                      name="chargeFeeBy"
+                      value="currency_out"
+                      onChange={() => {
+                        setFeeSetting({
+                          ...feeSetting,
+                          chargeFeeBy: 'currency_out',
+                        });
+                      }}
+                    />
+                    <label htmlFor="currency_out"> currency_out</label>
                   </div>
                 </div>
-                <div>
-                  feeReceiver
-                  <input
-                    value={feeSetting.feeReceiver}
-                    onChange={(e) => {
-                      return setFeeSetting({
-                        ...feeSetting,
-                        feeReceiver: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  feeAmount
-                  <input
-                    value={feeSetting.feeAmount}
-                    onChange={(e) => {
-                      return setFeeSetting({
-                        ...feeSetting,
-                        feeAmount: Number(e.target.value),
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <input
-                    type="checkbox"
-                    checked={feeSetting.isInBps}
-                    onChange={(e) => {
-                      setFeeSetting({
-                        ...feeSetting,
-                        isInBps: e.target.checked,
-                      });
-                    }}
-                  />
-                  <label htmlFor="isInBps">isInBps</label>
-                </div>
               </div>
-              <div className="">
-                <Widget
-                  theme={theme}
-                  tokenList={[]}
-                  provider={provider}
-                  defaultTokenOut={defaultTokenOut[chainId]}
-                  feeSetting={
-                    feeSetting.feeAmount && feeSetting.feeReceiver
-                      ? feeSetting
-                      : undefined
-                  }
+              <div>
+                feeReceiver
+                <input
+                  value={feeSetting.feeReceiver}
+                  onChange={(e) => {
+                    return setFeeSetting({
+                      ...feeSetting,
+                      feeReceiver: e.target.value,
+                    });
+                  }}
                 />
               </div>
+              <div>
+                feeAmount
+                <input
+                  value={feeSetting.feeAmount}
+                  onChange={(e) => {
+                    return setFeeSetting({
+                      ...feeSetting,
+                      feeAmount: Number(e.target.value),
+                    });
+                  }}
+                />
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  checked={feeSetting.isInBps}
+                  onChange={(e) => {
+                    setFeeSetting({
+                      ...feeSetting,
+                      isInBps: e.target.checked,
+                    });
+                  }}
+                />
+                <label htmlFor="isInBps">isInBps</label>
+              </div>
             </div>
-          </motion.div>
-          <motion.div
-            variants={fadeInUp}
-            className=" bottom-0 flex h-20 w-screen justify-end bg-white ty:fixed sm:hidden"
-          >
-            <div className="absolute right-0 pt-3 pr-3">
-              <ConnectButton label="Sign in" accountStatus="full" showBalance />
-            </div>
+            <Widget
+              theme={theme}
+              tokenList={[]}
+              provider={provider}
+              defaultTokenOut={defaultTokenOut[chainId]}
+              feeSetting={
+                feeSetting.feeAmount && feeSetting.feeReceiver
+                  ? feeSetting
+                  : undefined
+              }
+            />
           </motion.div>
         </motion.section>
       </main>
