@@ -172,7 +172,10 @@ const Home: NextPage = () => {
             </div>
           </div> */}
 
-          <motion.div variants={fadeInDown}>
+          <motion.div
+            variants={fadeInDown}
+            className=" w-1/1 flex justify-center"
+          >
             <Widget
               theme={theme}
               tokenList={[]}
