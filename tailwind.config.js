@@ -31,6 +31,7 @@ module.exports = {
       },
       backgroundImage: {
         bg: "url('/bg.svg')",
+        bgDark: "url('/bg-dark.svg')",
         bgItem: "url('/bg-item.svg')",
         banner: "url('/banner.svg')",
       },
