@@ -6,7 +6,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 import { defaultTokenOut } from '@/constant/kyberswap';
 import { widgetLightTheme } from '@/constant/style/kyberswap-widget';
@@ -15,6 +15,9 @@ import { fadeInDown, staggerContainer } from '@/styles/variants';
 
 const Home: NextPage = () => {
   const { connector } = useAccount();
+  const { chain } = useNetwork();
+
+  useEffect(() => {}, [chain]);
   const [chainId, setChainId] = useState(1);
   const [provider, setProvider] = useState<
     ethers.providers.Web3Provider | undefined
@@ -22,7 +25,6 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (connector) {
-      console.log(connector, 'will get provider');
       connector.getProvider().then((walletProvider) => {
         const web3Provider = new ethers.providers.Web3Provider(
           walletProvider,
@@ -33,7 +35,7 @@ const Home: NextPage = () => {
     } else {
       setProvider(undefined);
     }
-  }, [connector]);
+  }, [connector, chain]);
 
   useEffect(() => {
     provider &&
@@ -41,8 +43,6 @@ const Home: NextPage = () => {
         return setChainId(res.chainId);
       });
   }, [provider]);
-
-  useEffect(() => {}, []);
 
   const [feeSetting, setFeeSetting] = useState({
     feeAmount: 0,
@@ -230,7 +230,7 @@ const Home: NextPage = () => {
               theme={widgetLightTheme}
               tokenList={[]}
               provider={provider}
-              defaultTokenOut={defaultTokenOut[chainId]}
+              defaultTokenOut={defaultTokenOut[chainId ?? 1]}
               feeSetting={
                 feeSetting.feeAmount && feeSetting.feeReceiver
                   ? feeSetting
