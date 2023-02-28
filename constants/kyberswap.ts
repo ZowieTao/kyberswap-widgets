@@ -13,3 +13,15 @@ export const defaultTokenOut: Record<ChainId, string> = {
   42262: '0x6Cb9750a92643382e020eA9a170AbB83Df05F30B',
   10: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
 };
+
+enum ChargeFeeBy {
+  SRC = 'currency_in',
+  DEST = 'currency_out',
+}
+
+export const feeSetting = {
+  feeAmount: 1,
+  feeReceiver: '',
+  chargeFeeBy: ChargeFeeBy.SRC,
+  isInBps: true,
+};
