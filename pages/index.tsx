@@ -179,19 +179,17 @@ const Home: NextPage = () => {
                   <label htmlFor="isInBps">isInBps</label>
                 </div>
               </div>
-              <div className="">
-                <Widget
-                  theme={theme}
-                  tokenList={[]}
-                  provider={provider}
-                  defaultTokenOut={defaultTokenOut[chainId]}
-                  feeSetting={
-                    feeSetting.feeAmount && feeSetting.feeReceiver
-                      ? feeSetting
-                      : undefined
-                  }
-                />
-              </div>
+              <Widget
+                theme={theme}
+                tokenList={[]}
+                provider={provider}
+                defaultTokenOut={defaultTokenOut[chainId]}
+                feeSetting={
+                  feeSetting.feeAmount && feeSetting.feeReceiver
+                    ? feeSetting
+                    : undefined
+                }
+              />
             </div>
           </motion.div>
           <motion.div
