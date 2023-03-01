@@ -1,5 +1,4 @@
 import { BigNumber } from 'ethers';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 
@@ -15,6 +14,7 @@ import Warning from '@/public/assets/warning.svg';
 import { Trade } from '../hooks/useSwap';
 import useTheme from '../hooks/useTheme';
 import { useActiveWeb3 } from '../hooks/useWeb3Provider';
+import ImageWithFallback from '../image-with-fallback';
 import InfoHelper from '../InfoHelper';
 import {
   Button,
@@ -302,10 +302,22 @@ function Confirmation({
             <WaitingText>Waiting For Confirmation</WaitingText>
           )}
           <Amount>
-            <Image alt="" src={tokenInInfo.logoURI} width="16" height="16" />
+            <ImageWithFallback
+              alt=""
+              src={tokenInInfo.logoURI}
+              width="16"
+              height="16"
+              fallbackSrc="/assets/question.svg"
+            />
             {+Number(snapshotTrade?.amountIn).toPrecision(6)}
             <Arrow style={{ width: 16, transform: 'rotate(180deg)' }} />
-            <Image alt="" src={tokenOutInfo.logoURI} width="16" height="16" />
+            <ImageWithFallback
+              alt=""
+              src={tokenOutInfo.logoURI}
+              width="16"
+              height="16"
+              fallbackSrc={''}
+            />
             {+Number(snapshotTrade?.amountOut).toPrecision(6)}
           </Amount>
           {!txHash && (
@@ -382,18 +394,12 @@ function Confirmation({
       </ModalHeader>
 
       <Flex>
-        <Image
+        <ImageWithFallback
           alt=""
           src={tokenInInfo.logoURI}
           width="28"
           height="28"
-          onError={({ currentTarget }) => {
-            currentTarget.onerror = null; // prevents looping
-            // currentTarget.src = new URL(
-            //   '/public/assets/question.svg',
-            //   import.meta.url,
-            // ).href;
-          }}
+          fallbackSrc="/assets/question.svg"
         />
         {+Number(amountIn).toPrecision(10)}
         <div>{tokenInInfo.symbol}</div>
@@ -402,18 +408,11 @@ function Confirmation({
       <ArrowDown />
 
       <Flex>
-        <Image
+        <ImageWithFallback
           alt=""
           src={tokenOutInfo.logoURI}
           width="28"
-          height="28"
-          onError={({ currentTarget }) => {
-            currentTarget.onerror = null; // prevents looping
-            // currentTarget.src = new URL(
-            //   '../../assets/question.svg',
-            //   import.meta.url,
-            // ).href;
-          }}
+          fallbackSrc="/assets/question.svg"
         />
         {+Number(amountOut).toPrecision(10)}
         <div>{tokenOutInfo.symbol}</div>

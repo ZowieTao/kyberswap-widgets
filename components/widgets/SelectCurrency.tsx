@@ -1,6 +1,5 @@
 import { BigNumber } from 'ethers';
 import { formatUnits, isAddress } from 'ethers/lib/utils';
-import Image from 'next/image';
 import { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 
@@ -17,6 +16,7 @@ import { useToken } from './hooks/useToken';
 import useTokenBalances from './hooks/useTokenBalances';
 import { useImportedTokens, useTokens } from './hooks/useTokens';
 import { useActiveWeb3 } from './hooks/useWeb3Provider';
+import ImageWithFallback from './image-with-fallback';
 import { Button } from './styled';
 
 const Trash = styled(TrashIcon)`
@@ -317,7 +317,7 @@ function SelectCurrency({
                 }}
               >
                 <TokenInfo>
-                  <Image
+                  <ImageWithFallback
                     src={token.logoURI}
                     width="24"
                     height="24"
@@ -325,13 +325,7 @@ function SelectCurrency({
                     style={{
                       borderRadius: '999px',
                     }}
-                    onError={({ currentTarget }) => {
-                      currentTarget.onerror = null; // prevents looping
-                      // currentTarget.src = new URL(
-                      //   '../assets/question.svg',
-                      //   import.meta.url,
-                      // ).href;
-                    }}
+                    fallbackSrc="/assets/question.svg"
                   />
                   <div style={{ textAlign: 'left' }}>
                     <span>{token.symbol}</span>

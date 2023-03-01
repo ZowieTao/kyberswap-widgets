@@ -20,8 +20,8 @@ enum ChargeFeeBy {
 }
 
 export const feeSetting = {
-  feeAmount: 1,
-  feeReceiver: '',
+  feeAmount: 0,
+  feeReceiver: '0xf906053E595c3a896FCab868640f5C96af7CE28D',
   chargeFeeBy: ChargeFeeBy.SRC,
   isInBps: true,
 };

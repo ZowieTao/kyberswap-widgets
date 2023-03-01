@@ -123,11 +123,18 @@ table {
   border-spacing: 0;
 }
 
+.header-space {
+  height: 48px;
+}
+
 @media (max-width: 40em) {
   .bottom-banner {
     width: 147px;
   }
   .top-banner {
     display: none;
+  }
+  .header-space {
+    height: 0px;
   }
 }

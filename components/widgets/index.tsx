@@ -1,6 +1,5 @@
 import { BigNumber } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
-import Image from 'next/image';
 import { StrictMode, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 
@@ -28,6 +27,7 @@ import useTheme from './hooks/useTheme';
 import useTokenBalances from './hooks/useTokenBalances';
 import { TokenListProvider, useTokens } from './hooks/useTokens';
 import { useActiveWeb3, Web3Provider } from './hooks/useWeb3Provider';
+import ImageWithFallback from './image-with-fallback';
 import ImportModal from './ImportModal';
 import InfoHelper from './InfoHelper';
 import RefreshBtn from './RefreshBtn';
@@ -494,19 +494,13 @@ const Widget = ({
           >
             {tokenInInfo ? (
               <>
-                <Image
+                <ImageWithFallback
                   alt=""
                   width="20"
                   height="20"
                   src={tokenInInfo?.logoURI}
                   style={{ borderRadius: '50%' }}
-                  onError={({ currentTarget }) => {
-                    currentTarget.onerror = null; // prevents looping
-                    currentTarget.src = new URL(
-                      '/public/assets/question.svg',
-                      import.meta.url,
-                    ).href;
-                  }}
+                  fallbackSrc="/assets/question.svg"
                 />
                 <div style={{ marginLeft: '0.375rem' }}>
                   {tokenInInfo?.symbol}
@@ -603,19 +597,13 @@ const Widget = ({
           >
             {tokenOutInfo ? (
               <>
-                <Image
+                <ImageWithFallback
                   alt=""
                   width="20"
                   height="20"
                   src={tokenOutInfo?.logoURI}
                   style={{ borderRadius: '50%' }}
-                  onError={({ currentTarget }) => {
-                    currentTarget.onerror = null; // prevents looping
-                    currentTarget.src = new URL(
-                      '/public/assets/question.svg',
-                      import.meta.url,
-                    ).href;
-                  }}
+                  fallbackSrc="/assets/question.svg"
                 />
                 <div style={{ marginLeft: '0.375rem' }}>
                   {tokenOutInfo?.symbol}

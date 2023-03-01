@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
 import Widget from '@/components/widgets';
-import { defaultTokenOut, feeSetting } from '@/constants/kyberswap';
+import { defaultTokenOut } from '@/constants/kyberswap';
 import { widgetLightTheme } from '@/constants/style/kyberswap-widget';
 import { fadeInDown, staggerContainer } from '@/styles/variants';
 
@@ -81,24 +81,12 @@ const Home: NextPage = () => {
           <Image
             className="top-banner"
             src="/banner.svg"
-            alt="opencord banner"
+            alt="banner"
             height="36"
             width="147"
             style={{
               left: '20px',
               top: '20px',
-              position: 'fixed',
-            }}
-          />
-          <Image
-            height="36"
-            width="0"
-            src="/banner.svg"
-            alt="opencord banner"
-            className="bottom-banner"
-            style={{
-              left: '20px',
-              bottom: '40px',
               position: 'fixed',
             }}
           />
@@ -125,16 +113,16 @@ const Home: NextPage = () => {
               <ConnectButton label="Connect wallet" />
             </div>
           </motion.header>
+          <div className="header-space" />
           <motion.div
             variants={fadeInDown}
             style={{
               width: '100vw',
-              maxWidth: '100vw',
               padding: '24px',
               display: 'flex',
-              justifyContent: 'center',
+              maxWidth: '100vw',
               boxSizing: 'border-box',
-              marginTop: '48px',
+              justifyContent: 'center',
             }}
           >
             <Widget
@@ -142,9 +130,19 @@ const Home: NextPage = () => {
               tokenList={[]}
               provider={provider}
               defaultTokenOut={defaultTokenOut[chainId ?? 1]}
-              feeSetting={feeSetting}
             />
           </motion.div>
+          <Image
+            height="36"
+            width="0"
+            src="/banner.svg"
+            alt="banner"
+            className="bottom-banner"
+            style={{
+              paddingLeft: '25px',
+              marginBottom: '25px',
+            }}
+          />
         </motion.section>
       </main>
     </>
@@ -156,11 +154,8 @@ export default Home;
 const AppHeader = () => {
   return (
     <Head>
-      <title>Opencord Kyberswap Widgets Plugin</title>
-      <meta
-        name="description"
-        content="opencord plugin for kyberswap widgets"
-      />
+      <title>Zowie Kyberswap Widgets Plugin</title>
+      <meta name="description" content="kyberswap widgets" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link rel="icon" href="/favicon.ico" />
     </Head>
